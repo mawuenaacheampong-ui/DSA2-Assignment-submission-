@@ -43,11 +43,35 @@ def neighbours(pos):
             result.append((nr, nc))
     return result
 
+def solve_backtracking():
+    stack = [START]
+    visited = {START}
+    order = [START]
+    steps = 0
+    while stack:
+        current = stack[-1]
+        if current == EXIT:
+            return True, order, stack, steps
+        moved = False
+        for nxt in neighbours(current):
+            if nxt not in visited:
+                visited.add(nxt)
+                order.append(nxt)
+                stack.append(nxt)
+                steps += 1
+                moved = True
+                break
+        if not moved:
+            stack.pop()
+            steps += 1
+    return False, order, [], steps
 
 def main():
     print("Maze (# = wall, . = path):")
     print_maze()
-    
+    success, visited, path, steps = solve_backtracking()
+    print("Backtracking finished:", "exit found" if success else "exit NOT found")
+    print("Steps:", steps, "| Squares visited:", len(set(visited)), "| Path length:", len(path) - 1)
 
 if __name__ == "__main__":
     main()
